@@ -10,11 +10,21 @@ $(GJB):
 
 #### Recipies ####
 
+help:
+	@echo Run these commands in this order to reproduce the results. 
+	@echo 1. run `make install` to install necessary R packages and download up-to-date data.
+	@echo 2. run `make process_data` to clean an organise the downloaded data for analysis, and create data subsets
+	@echo 3. run `make musical_dimensions` to extract latent variables from the latent variable model and reliability restricted model, for all data subsets
+	@echo 4. run `make amova` to calculate the proportion of within- and between-group variance for each data subset and each latent variable. 
+	@echo 5. run `make phist` to calculate musical similarity between societies, using PhiST scores. This creates phist for the two song dataset only. To calculate for the 10 and sccs samples used `make phist_10` and `make phist_sccs`.
+	@echo 6. run `make genalex_1` to prepare data for GenaLex. Models of geographic autocorrelation are performed used GenaLex, an excel plugin, available here: https://biology-assets.anu.edu.au/GenAlEx/Welcome.html
+	@echo 7. run `make genalex_2` to make the graphs from the manually created output. 
+
 clean:
-	rm -r processed_data
+	rm -r processed_data results figures
 
 # Install downloads the necessary data from Github to run the models
-install: $(GJB) $(DPLACE)
+install: $(GJB)
 	Rscript install.R
 	
 process_data: install
@@ -23,12 +33,13 @@ process_data: install
 	RScript processing/clean_data.R
 	RScript processing/pair_data.R
 	RScript processing/subset_data.R
+	@echo Prune the global phylogeny
+	RScript processing/prune_edgetree.R
 	@echo Make maps of the samples
 	mkdir -p figures/
 	RScript figure_code/map_data.R -d processed_data/cantometrics_2songs.csv
 	RScript figure_code/map_data.R -d processed_data/cantometrics_10songs.csv
 	RScript figure_code/map_data.R -d processed_data/cantometrics_sccs.csv
-	RScript figure_code/map_data.R -d processed_data/cantometrics_regular.csv
 	
 musical_dimensions:
 	mkdir -p results/
@@ -38,5 +49,92 @@ musical_dimensions:
 	RScript analysis/latent_variablemodel.R -d processed_data/cantometrics_2songs.csv
 	RScript analysis/latent_variablemodel.R -d processed_data/cantometrics_10songs.csv
 	RScript analysis/latent_variablemodel.R -d processed_data/cantometrics_sccs.csv
+	RScript analysis/latent_variablemodel.R -d processed_data/cantometrics_2songs.csv -l data/latent_variablemodel_highreliability.txt
+	RScript analysis/latentmodel_comparison.R
+
+amova:
+	mkdir -p results/amova
+	@echo Perfoming Linguistic AMOVA tests with a two song sample...
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r differentiation -g Language_family
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r ornamentation -g Language_family
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r rhythm -g Language_family
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r dynamics -g Language_family
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r tension -g Language_family
+	@echo Perfoming Spatial AMOVA tests with a two song sample...
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r differentiation -g Division
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r ornamentation -g Division
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r rhythm -g Division
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r dynamics -g Division
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r tension -g Division
+	@echo Perfoming Linguistic AMOVA tests with a ten song sample...
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r differentiation -g Language_family
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r ornamentation -g Language_family
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r rhythm -g Language_family
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r dynamics -g Language_family
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r tension -g Language_family
+	@echo Perfoming Spatial AMOVA tests with a ten song sample...
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r differentiation -g Division
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r ornamentation -g Division
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r rhythm -g Division
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r dynamics -g Division
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r tension -g Division
+	@echo Perfoming Linguistic AMOVA tests with the sccs sample...
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r differentiation -g Language_family
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r ornamentation -g Language_family
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r rhythm -g Language_family
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r dynamics -g Language_family
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r tension -g Language_family
+	@echo Perfoming Spatial AMOVA tests with the sccs sample...
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r differentiation -g Division
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r ornamentation -g Division
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r rhythm -g Division
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r dynamics -g Division
+	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r tension -g Division
+	
+phist:
+	@echo	Creation of the Musical PhiST matrices. 
+	@echo This will take approximately 6 hours to run, using a Apple M1 Pro processor with 16GB ram.
+	mkdir -p results/phist
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r differentiation
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r ornamentation
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r rhythm
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r dynamics
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r tension
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r all
+	
+phist_10:
+	mkdir -p results/phist
+	@echo This will take approximately 1 hour 20 mins to run, using a Apple M1 Pro processor with 16GB ram.
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r differentiation
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r ornamentation
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r rhythm
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r dynamics
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r tension
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_10songs.csv -r all
+
+phist_sccs:
+	mkdir -p results/phist
+	@echo This will take approximately 10 minutes to run, using a Apple M1 Pro processor with 16GB ram.
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r differentiation
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r ornamentation
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r rhythm
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r dynamics
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r tension
+	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r all
+
+genalex_1:
+	RScript processing/fst_tomatrix.R
+	RScript processing/genalex_prep.R -d processed_data/latent_variablemodelcantometrics_2songs.csv
+	RScript processing/genalex_prep.R -d processed_data/latent_variablemodelcantometrics_10songs.csv
+	RScript processing/genalex_prep.R -d processed_data/latent_variablemodelcantometrics_sccs.csv
+	@echo Once these files are created, run the genalex functions using the click and point menus. 
+	@echo Running this twice should not overwrite the existing results. Only overwriting the existing distance matrices. 
+	@echo For Genalex to run, you need to add two empty rows to the top of each matrix. 
+
+genalex_2:
+	@echo Make Genalex Plots
+	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx
+	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_10songsdistances.xlsx
+	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_sccsdistances.xlsx
 	
 	

@@ -4,24 +4,19 @@ ornamentation =~ line_28 + line_29 + line_23 + line_31
 rhythm =~ line_11 + line_24 + line_17
 dynamics =~ line_25 + line_36 + line_32 + line_35
 tension =~ line_34 + line_35 + line_33 + line_29
-#organization =~ line_4 + line_7
 
 # Allow latent variables to be correlated
 differentiation ~~ ornamentation
 differentiation ~~ rhythm
 differentiation ~~ dynamics
 differentiation ~~ tension
-#differentiation ~~ organization
 ornamentation ~~ dynamics
 ornamentation ~~ rhythm
 ornamentation ~~ tension
 #ornamentation ~~ organization
 rhythm ~~ dynamics
 rhythm ~~ tension
-#rhythm ~~ organization
 dynamics ~~ tension
-#dynamics ~~ organization
-#tension ~~ organization
 
 # highly related variables
 # unexplained by model variance
@@ -31,5 +26,3 @@ line_37 ~~ line_36 # Enunciation ~~ Accent
 line_10 ~~ line_30 # Repetition of Text ~~ Glottal
 line_32 ~~ line_35 # Vocal Pitch (register) ~~ Rasp
 line_17 ~~ line_33 # Phrase length ~~ Vocal width
-#line_11 ~~  line_7
-#line_24 ~~  line_7

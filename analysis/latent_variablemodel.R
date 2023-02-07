@@ -1,6 +1,6 @@
-# Extracting musical dimensions from the latent variable model
-
 #!/usr/bin/env Rscript
+
+# Extracting musical dimensions from the latent variable model
 
 ### script that takes a text file as input containing a lavaan model
 ### 
@@ -19,15 +19,20 @@ option_list <- list(
   make_option(c("-d", "--datafile"), action="store", 
               type="character", 
               default = 'processed_data/cantometrics_2songs.csv', 
-              help="Data file to use")
+              help="Data file to use"),
+  make_option(c("-l", "--latentmodel"), action = "store",
+              type = "character",
+              default = "data/latent_variablemodel.txt",
+              help = "Latent model to use")
 )
 
 opt = parse_args(OptionParser(option_list=option_list))
 
 datafile = opt$datafile
+latent_file = opt$latentmodel
 
 #### Read in Data ####
-lavaan_model = read_file(file = "data/latent_variablemodel.txt")
+lavaan_model = read_file(file = latent_file)
 cantometrics = read.csv(datafile)
 
 #### Run LAVAAN Model ####
@@ -56,14 +61,15 @@ cat(paste0("CFI should be >0.95 \n CFI: ", round(fitMeasures(fit, "cfi"), 2),
            "\n")) # should be > 0.95
 
 cat("Top 5 possible improvements:\n")
-print(modindices(fit, sort = TRUE, maximum.number = 12))
+print(modindices(fit, sort = TRUE, maximum.number = 5))
 
 param_est = parameterestimates(fit, standardized = TRUE)
 
 write.csv(param_est, 
-          paste0(
-            'results/lavaanparameterestimates_', 
-            basename(datafile))
+          paste0("processed_data/",
+            tools::file_path_sans_ext(basename(latent_file)),
+            tools::file_path_sans_ext(basename(datafile)),
+          "_lavaanparameterestimates.csv")
           )
 
 # Get latent variables
@@ -72,7 +78,8 @@ latent_variables = lavPredict(fit)
 latent_data = cbind(cantometrics, latent_variables)
 
 write.csv(latent_data, 
-          paste0('processed_data/latentvariables_', 
+          paste0('processed_data/',
+                 tools::file_path_sans_ext(basename(latent_file)),
                  basename(datafile)), 
           row.names = FALSE,
           fileEncoding = 'utf-8')

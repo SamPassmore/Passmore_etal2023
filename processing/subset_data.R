@@ -45,56 +45,7 @@ sccs = read.csv('https://raw.githubusercontent.com/D-PLACE/dplace-data/master/da
 cantometrics_sccs = cantometrics_data %>% 
   filter(pairing.glottocode %in% sccs$glottocode)
 
-australia = cantometrics_data %>% 
-  filter(Region == "Australia") 
-
-# Choose 5 societies at random
-aus_societyid = sample(unique(australia$society_id), size = 5, replace = FALSE)
-
-australia_data = cantometrics_data %>% 
-  filter(society_id %in% aus_societyid)
-
-cantometrics_sccs = rbind(cantometrics_sccs, australia_data)
-
 describe_sample(cantometrics_sccs, "SCCS")
 
 write.csv(cantometrics_sccs, 'processed_data/cantometrics_sccs.csv')
 
-#### Regular Sample ####
-# Sample so that there are a maximum number of societies within each Geographical Region
-
-cantometrics_data %>%
-  distinct(society_id, .keep_all = TRUE) %>%
-  group_by(Region) %>%
-  count()
-
-# Ensure there are maximum 15 societies per region
-# Which also have linguistic and genetic information
-n_societies = 15
-regular_societies = cantometrics_data %>% 
-  dplyr::filter(!is.na(phylogeny.glottocode) &
-                  !is.na(PopName) & 
-                  !is.na(Society_latitude) &
-                  !is.na(Society_longitude)) %>% 
-  group_by(Region) %>% 
-  distinct(society_id, .keep_all = TRUE) %>% 
-  top_n(n = n_societies) %>% 
-  pull(society_id)
-
-
-regular_sample = cantometrics_data %>% 
-  dplyr::filter(!is.na(phylogeny.glottocode) &
-                  !is.na(PopName) & 
-                  !is.na(Society_latitude) &
-                  !is.na(Society_longitude)) %>% 
-  dplyr::filter(society_id %in% regular_societies)
-
-
-regular_sample %>%
-  distinct(society_id, .keep_all = TRUE) %>%
-  group_by(Region) %>%
-  count()
-
-describe_sample(regular_sample, "regularly sampled")
-
-write.csv(regular_sample, 'processed_data/cantometrics_regular.csv')
