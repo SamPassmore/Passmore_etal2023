@@ -1,0 +1,23 @@
+# Latent dimensions derived from Lomax (1980)
+differentiation =~ line_37 + line_10 + line_23
+ornamentation =~ line_23 + line_29 + line_31
+#rhythm =~ line_11
+dynamics =~ line_25 + line_36 + line_32
+#tension =~ line_29
+
+# Allow latent variables to be correlated
+#differentiation ~~ ornamentation
+#differentiation ~~ rhythm
+#differentiation ~~ dynamics
+#differentiation ~~ tension
+#ornamentation ~~ dynamics
+#ornamentation ~~ rhythm
+#ornamentation ~~ tension
+#rhythm ~~ dynamics
+#rhythm ~~ tension
+#dynamics ~~ tension
+
+line_37 ~~ line_25 
+line_10 ~~ line_25 
+line_37 ~~ line_36 
+line_10 ~~ line_36

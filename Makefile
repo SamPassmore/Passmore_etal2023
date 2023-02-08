@@ -19,6 +19,7 @@ help:
 	@echo 5. run `make phist` to calculate musical similarity between societies, using PhiST scores. This creates phist for the two song dataset only. To calculate for the 10 and sccs samples used `make phist_10` and `make phist_sccs`.
 	@echo 6. run `make genalex_1` to prepare data for GenaLex. Models of geographic autocorrelation are performed used GenaLex, an excel plugin, available here: https://biology-assets.anu.edu.au/GenAlEx/Welcome.html
 	@echo 7. run `make genalex_2` to make the graphs from the manually created output. 
+	@echo 8. run `make delta` to calculate delta scores for an Indo-European, Oceanic, and African sample. 
 
 clean:
 	rm -r processed_data results figures
@@ -137,4 +138,42 @@ genalex_2:
 	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_10songsdistances.xlsx
 	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_sccsdistances.xlsx
 	
+delta:
+	@echo Calculate Delta scores
+	RScript analysis/delta_scores.R -r differentiation -d processed_data/latent_variablemodelcantometrics_2songs.csv
+	RScript analysis/delta_scores.R -r ornamentation -d processed_data/latent_variablemodelcantometrics_2songs.csv
+	RScript analysis/delta_scores.R -r rhythm -d processed_data/latent_variablemodelcantometrics_2songs.csv
+	RScript analysis/delta_scores.R -r dynamics -d processed_data/latent_variablemodelcantometrics_2songs.csv
+	RScript analysis/delta_scores.R -r tension -d processed_data/latent_variablemodelcantometrics_2songs.csv
+	RScript analysis/delta_scores.R -r all -d processed_data/latent_variablemodelcantometrics_2songs.csv
+	RScript analysis/deltascore_summary.R -d 2songs
 	
+delta_10:
+	@echo Calculate Delta scores
+	RScript analysis/delta_scores.R -r differentiation -d processed_data/latent_variablemodelcantometrics_10songs.csv
+	RScript analysis/delta_scores.R -r ornamentation -d processed_data/latent_variablemodelcantometrics_10songs.csv
+	RScript analysis/delta_scores.R -r rhythm -d processed_data/latent_variablemodelcantometrics_10songs.csv
+	RScript analysis/delta_scores.R -r dynamics -d processed_data/latent_variablemodelcantometrics_10songs.csv
+	RScript analysis/delta_scores.R -r tension -d processed_data/latent_variablemodelcantometrics_10songs.csv
+	RScript analysis/deltascore_summary.R -d 10songs
+	
+delta_sccs:
+	@echo Calculate Delta scores
+	RScript analysis/delta_scores.R -r differentiation -d processed_data/latent_variablemodelcantometrics_sccs.csv
+	RScript analysis/delta_scores.R -r ornamentation -d processed_data/latent_variablemodelcantometrics_sccs.csv
+	RScript analysis/delta_scores.R -r rhythm -d processed_data/latent_variablemodelcantometrics_sccs.csv
+	RScript analysis/delta_scores.R -r dynamics -d processed_data/latent_variablemodelcantometrics_sccs.csv
+	RScript analysis/delta_scores.R -r tension -d processed_data/latent_variablemodelcantometrics_sccs.csv
+	RScript analysis/deltascore_summary.R -d sccs
+	
+mantel:
+	@echo Calculate Partial Mantel scores
+	RScript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx
+	RScript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_10songsdistances.xlsx
+	RScript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_sccsdistances.xlsx
+
+rda:
+	@echo Calculate RDA R2
+	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx
+	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_10songsdistances.xlsx
+	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_sccsdistances.xlsx

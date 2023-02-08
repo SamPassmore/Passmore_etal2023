@@ -34,7 +34,7 @@ opt = parse_args(OptionParser(option_list=option_list))
 
 datafile = opt$datafile
 response = opt$response
-n_societies = opt$societies
+n_societies = as.numeric(opt$societies)
 
 #### data ####
 cantometrics = read.csv(datafile)
@@ -46,11 +46,14 @@ cantometric_societies = cantometrics %>%
 subset = word(basename(datafile), 3, sep = "_")
 parestimates = read.csv(paste0("results/lavaanparameterestimates_cantometrics_", subset))
 
-variables = parestimates %>% 
-  filter(lhs == response) %>% 
-  filter(str_detect(rhs, "line_")) %>% 
-  pull(rhs)
-
+if(response == "all"){
+  variables = colnames(cantometrics)[str_detect(colnames(cantometrics), "line_")] 
+} else {
+  variables = parestimates %>% 
+    filter(lhs == response) %>% 
+    filter(str_detect(rhs, "line_")) %>% 
+    pull(rhs)
+}
 
 #### analysis ####
 
@@ -135,4 +138,21 @@ rownames(eu) = eu_taxa
 
 european_delta = delta_score(eu, eu_taxa, method = "euclidean", n_cores = detectCores() - 1)
 
-beepr::beep(4)
+format_output = function(x, location = "africa"){
+  df = data.frame(societies = names(x$delta_taxon_scores),
+                  scores = x$delta_taxon_scores)
+  
+  df$location = location
+  df = rbind(df, c("overall_score", x$delta_score, location))
+  
+  df
+}
+
+africa = format_output(africa_delta, "africa")
+oceania = format_output(oceania_delta, "oceania")
+euro = format_output(european_delta, "europe")
+
+output = rbind(africa, oceania, euro)
+
+label = tools::file_path_sans_ext(basename(datafile)) 
+write.csv(output, file = paste0("results/delta/", label, "_", response, "_deltascores.csv"))
