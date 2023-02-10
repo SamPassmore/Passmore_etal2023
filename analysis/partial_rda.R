@@ -4,6 +4,7 @@ suppressPackageStartupMessages({
   library(readxl)
   library(stringr)
   library(vegan)
+  library(ape)
   library(optparse)
   library(ggplot2)
   library(purrr)
@@ -100,16 +101,45 @@ rda_output = apply(rda_pairs, 1, function(x){
       Y = pcoa_factors[[x[2]]])
 })
 
+rda_permuted_output = apply(rda_pairs, 1, function(x){
+  perms = list()
+  for(i in 1:100){X = pcoa_factors[[x[1]]]
+  permutation_order = sample(1:nrow(X))
+  X = X[permutation_order,]
+  
+  
+  rda_result = rda(X = X,
+                   Y = pcoa_factors[[x[2]]])
+  perms[[i]] = RsquareAdj(rda_result)
+  }
+  
+  do.call(rbind, perms)
+  
+})
+
+
 summary_list = list()
 for(i in 1:nrow(rda_pairs)){
   nmes = unlist(rda_pairs[i,])
   rda_o = rda_output[[i]]
   r2 = unlist(RsquareAdj(rda_o))
   
+  perm_out = matrix(as.numeric(rda_permuted_output[[i]]), ncol = 2)
+  perm_r2 = colMeans(perm_out)
+  
+  rda_z = (r2 - perm_out)/apply(perm_out, 2, sd)
+  p.value = apply(rda_z, 2, function(x) sum(x > 1))
+  
   oo = data.frame(response = nmes[1], 
                   explanatory = nmes[2],
                   r2 = r2[1],
-                  adj.r2 = r2[2])
+                  adj.r2 = r2[2],
+                  perm_r2 = perm_r2[1],
+                  perm_adjr2 = perm_r2[2],
+                  perm_r2z = rda_z[1],
+                  perm_adjr2z = rda_z[2],
+                  perm_r2z_p = p.value[1],
+                  perm_adjr2z_p = p.value[2])
   summary_list[[i]] = oo
 }
 
@@ -136,11 +166,23 @@ for(i in 1:nrow(rda_3pairs)){
   rda_o = rda_3output[[i]]
   r2 = unlist(RsquareAdj(rda_o))
   
+  perm_out = matrix(as.numeric(rda_permuted_output[[i]]), ncol = 2)
+  perm_r2 = colMeans(perm_out)
+  
+  rda_z = (r2 - perm_out)/apply(perm_out, 2, sd)
+  p.value = apply(rda_z, 2, function(x) sum(x > 1))
+  
   oo = data.frame(response = nmes[1], 
                   explanatory = nmes[2],
                   constraint = nmes[3],
                   r2 = r2[1],
-                  adj.r2 = r2[2])
+                  adj.r2 = r2[2],
+                  perm_r2 = perm_r2[1],
+                  perm_adjr2 = perm_r2[2],
+                  perm_r2z = rda_z[1],
+                  perm_adjr2z = rda_z[2],
+                  perm_r2z_p = p.value[1],
+                  perm_adjr2z_p = p.value[2])
   summary_list3[[i]] = oo
 }
 

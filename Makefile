@@ -137,6 +137,7 @@ genalex_2:
 	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx
 	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_10songsdistances.xlsx
 	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_sccsdistances.xlsx
+	RScript analysis/genalex_comparison.R
 	
 delta:
 	@echo Calculate Delta scores
@@ -171,9 +172,11 @@ mantel:
 	RScript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx
 	RScript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_10songsdistances.xlsx
 	RScript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_sccsdistances.xlsx
+	RScript analysis/summarise_mantel.R
 
 rda:
 	@echo Calculate RDA R2
 	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx
 	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_10songsdistances.xlsx
 	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_sccsdistances.xlsx
+	RScript analysis/summarise_rda.R

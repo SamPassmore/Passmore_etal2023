@@ -5,6 +5,8 @@ suppressPackageStartupMessages({
   library(stringr)
   library(vegan)
   library(optparse)
+  library(purrr)
+  library(phangorn)
 })
 
 
@@ -62,7 +64,7 @@ map2(distance_matrices, sheets, function(d, s){
   d3 = as.matrix(sapply(d2, as.numeric))  
   rownames(d3) = unlist(d[,ncol(d)])
   d4 = as.dist(d3)
-  write.nexus.dist(d4, paste0("tmp/", s, ".nex"))
+  write.nexus.dist(d4, paste0("results/nex/", s, ".nex"))
 })
 
 #### Reformat from Genalex format ####

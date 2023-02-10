@@ -90,7 +90,7 @@ covariance = results$componentsofcovariance
 covariance$response = response
 
 dataset = basename(datafile)
-output = paste0('results/amova/', response, "_amova_", dataset)
+output = paste0('results/amova/', response, "_", str_remove_all(grouping, "_"), "_amova_", dataset)
 
 cat("Results saved at", output, "\n")
 

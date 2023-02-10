@@ -1,6 +1,18 @@
-﻿Results,,,,,
-,,,,,
-Data,Principle components,Within vs Between society variance,Geographic Autocorrelation,Delta Scores,Partial RDA
-All societies with 2 or more songs,,,,,
-All societies with 10 or more songs,,,,,
-eHRAF Probability Sample,,,,,
+﻿Results,,,,,,
+Latent Variable analyses,,,,,,
+,N Societies,N Songs,Latent variable model fit,Latent Variable model comparisons,Within vs Between Variance,Delta Scores
+All societies with 2 or more songs,719,"5,242",RSMEA=0.06; SRMR=0.05; CFI=0.95,Table S8: All correlations > 0.97,Table S10 & Figure S3,In main text & Table S12 & Fig S12
+All societies with 10 or more songs,222,"3,063",RSMEA=0.06; SRMR=0.05; CFI=0.94,Table S8: All correlations > 0.97,Table S10 & Figure S3,Table S12 & Fig S12. Some variables in some areas show higher levels of tree-likeness 
+SCCS Sample,95,796,RSMEA=0.06; SRMR=0.05; CFI=0.95,Table S8: All correlations > 0.97,Table S10 & Figure S3. SCCS shows higher between group variance. ,Table S12 & Fig S12
+With Restricted Variable set,719,"5,242",RSMEA=0.07; SRMR=0.04; CFI=0.95,Table S9: All correlations >0.7 except Tension,-,-
+,,,,,,
+"Musical, Genetic, Linguistic Analyses",,,,,,
+Data,N Societies,Geographic Autocorrelation,Mantel Tests,Partial RDA,,
+All societies with 2 or more songs,117,Figure 3,Table S13,Table S13,,
+All societies with 10 or more songs,40,Figure S10,Table S14,Table S14,,
+SCCS Sample,20,Figure S11. SCCS shows low levels of Autocorrelation,Table S15,Table S15. SCCS results are not similar to other datasets,,
+,,,,,,
+,,,,,,
+Green,Qualitatively similar,,,,,
+Yellow,Minor qualitative difference,,,,,
+Red,Major qualitative difference,,,,,

@@ -34,4 +34,5 @@ output = data %>%
   select(id, scores, location) %>% 
   pivot_wider(., values_from = scores, names_from = location)
 
+
 write.csv(output, file = paste0("results/delta/", datafile, "_deltasummary.csv"), row.names = FALSE)
