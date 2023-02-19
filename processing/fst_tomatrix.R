@@ -18,8 +18,6 @@ cantometric_ids = cantometric_ids %>%
   ungroup() %>% 
   distinct()
 
-View(cantometric_ids)
-
 genetics_long = read.csv('data/PairwiseFstListinfo_Cantometric.txt', sep = "\t")
 
 # pair glottocodes to genetics data
