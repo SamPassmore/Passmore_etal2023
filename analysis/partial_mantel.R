@@ -7,6 +7,7 @@ suppressPackageStartupMessages({
   library(optparse)
   library(purrr)
   library(phangorn)
+  library(dplyr)
 })
 
 
@@ -41,13 +42,13 @@ option_list <- list(
               help="Data file to use"),
   make_option(c("-r", "--region"),
               help="Region to subset to",
-              default = "world")
+              default = "Europe")
 )
 
 opt = parse_args(OptionParser(option_list=option_list))
 
 datafile = opt$datafile
-region = opt$response
+region = opt$region
 
 #### Read in distance data from Genalex ####
 sheets = excel_sheets(path = datafile)
@@ -67,15 +68,28 @@ map2(distance_matrices, sheets, function(d, s){
   write.nexus.dist(d4, paste0("results/nex/", s, ".nex"))
 })
 
+#### Subset ####
+cantometric_societies = read.csv('raw/gjb/cldf/societies.csv')
+if(region != "world"){
+  ids = cantometric_societies %>% filter(Region == region) %>% pull(society_id) %>% 
+    as.character()
+} else {
+  ids = unlist(distance_matrices[[1]][,ncol(distance_matrices[[1]])])
+}
+
 #### Reformat from Genalex format ####
 distance_matrices = 
   lapply(distance_matrices, function(d){
-  rnames = unlist(d[,ncol(d)])
-  d = d[,-ncol(d)]
-  d = as.matrix(sapply(d, as.numeric))
-  rownames(d) = rnames
-  d
-})
+    rnames = unlist(d[,ncol(d)])
+    d = d[,-ncol(d)]
+    d = as.matrix(sapply(d, as.numeric))
+    rownames(d) = rnames
+    colnames(d) = str_remove_all(colnames(d), "X")
+    ids_s = ids[ids %in% rnames]
+    d[ids_s, ids_s]
+  })
+
+cat("There are", nrow(distance_matrices[[1]]), "societies in this sample.\n")
 
 # standardize
 distance_matrices = lapply(distance_matrices, function(d){
@@ -137,7 +151,7 @@ write.csv(output,
             "results/mantel/", 
             tools::file_path_sans_ext(basename(datafile)), 
             "_",
-            region, 
+            str_remove_all(region, " "), 
             "_",
             "partialmantel.csv"), 
           row.names = FALSE)

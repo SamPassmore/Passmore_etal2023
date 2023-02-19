@@ -10,7 +10,15 @@ cantometric_ids = read_xlsx('data/id_matches.xlsx', sheet = "id_matches", na = "
 
 cantometric_ids = cantometric_ids %>% 
   dplyr::select(PopName, pairing.glottocode, society_id) %>%
+  group_by(PopName, society_id) %>% 
+  mutate(n_songs = n()) %>% 
+  ungroup() %>%
+  group_by(PopName) %>% 
+  slice_max(n_songs) %>% 
+  ungroup() %>% 
   distinct()
+
+View(cantometric_ids)
 
 genetics_long = read.csv('data/PairwiseFstListinfo_Cantometric.txt', sep = "\t")
 
@@ -65,6 +73,12 @@ if(any(genetics_matrix < 0)) genetics_matrix[genetics_matrix < 0] = 0.00001
 x = assert_that(all(genetics_matrix >= 0))
 
 # Relabel with Society_ids
+
+# ensure we label with the most frequent society id (sometimes we aggregate societies)
+cantometric_ids = cantometric_ids %>% 
+  group_by(PopName, society_id) %>%
+   %>% 
+  slice_max(n_songs)
 colnames(genetics_matrix) = cantometric_ids$society_id[match(rownames(genetics_matrix), cantometric_ids$PopName)]
 rownames(genetics_matrix) = colnames(genetics_matrix)
 

@@ -1,6 +1,17 @@
 # join mantel and rda
 library(dplyr)
 library(purrr)
+library(optparse)
+
+option_list <- list( 
+  make_option(c("-r", "--region"),
+              help="Region to subset to",
+              default = "world")
+)
+
+opt = parse_args(OptionParser(option_list=option_list))
+
+region = opt$region
 
 mantel_files = list.files('results/mantel/', pattern = "partialmantel.csv", full.names = TRUE)
 rda_files = list.files('results/rda/', pattern = "3wayRDA.csv", full.names = TRUE)

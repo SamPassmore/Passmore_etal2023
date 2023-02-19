@@ -169,6 +169,7 @@ delta_sccs:
 	
 mantel:
 	@echo Calculate Partial Mantel scores
+	mkdir -p results/mantel
 	RScript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx
 	RScript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_10songsdistances.xlsx
 	RScript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_sccsdistances.xlsx
@@ -176,7 +177,21 @@ mantel:
 
 rda:
 	@echo Calculate RDA R2
+	mkdir -p results/rda
 	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx
 	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_10songsdistances.xlsx
 	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_sccsdistances.xlsx
 	RScript analysis/summarise_rda.R
+	RScript analysis/concatenate_rdamantel.R
+	
+regional:
+	@echo Calculate RDA R2
+	mkdir -p results/rda
+	mkdir -p results/mantel
+	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx -r Africa
+	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx -r Europe
+	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx -r "Southeast Asia"
+	Rscript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx -r Africa
+	Rscript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx -r Europe
+	Rscript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx -r "Southeast Asia"
+

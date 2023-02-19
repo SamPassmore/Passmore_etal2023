@@ -8,6 +8,7 @@ suppressPackageStartupMessages({
   library(optparse)
   library(ggplot2)
   library(purrr)
+  library(dplyr)
 })
 
 #### Parameters ####
@@ -25,7 +26,7 @@ option_list <- list(
 opt = parse_args(OptionParser(option_list=option_list))
 
 datafile = opt$datafile
-region = opt$response
+region = opt$region
 
 #### Read in Distance data ####
 sheets = excel_sheets(path = datafile)
@@ -36,6 +37,14 @@ distance_matrices = lapply(sheets,
                              suppressMessages(read_xlsx(datafile, sheet = s, skip = 2)))
 names(distance_matrices) = sheets
 
+cantometric_societies = read.csv('raw/gjb/cldf/societies.csv')
+if(region != "world"){
+  ids = cantometric_societies %>% filter(Region == region) %>% pull(society_id) %>% 
+    as.character()
+} else {
+  ids = unlist(distance_matrices[[1]][,ncol(distance_matrices[[1]])])
+}
+
 #### Reformat from Genalex format ####
 distance_matrices = 
   lapply(distance_matrices, function(d){
@@ -43,8 +52,12 @@ distance_matrices =
     d = d[,-ncol(d)]
     d = as.matrix(sapply(d, as.numeric))
     rownames(d) = rnames
-    d
+    colnames(d) = str_remove_all(colnames(d), "X")
+    ids_s = ids[ids %in% rnames]
+    d[ids_s, ids_s]
   })
+
+cat("There are", nrow(distance_matrices[[1]]), "societies in this sample.\n")
 
 # standardize
 distance_matrices = lapply(distance_matrices, function(d){
@@ -73,6 +86,7 @@ pcoa_results = lapply(distance_matrices, function(m){
   constant = 1 / orig_sum
   eigen_c = eigen * constant
   pcoa_out$values$explained = eigen_c / sum(eigen_c)
+  
   pcoa_out
 })
 
@@ -198,7 +212,9 @@ label = datafile %>%
   tail(1)
 
 write.csv(summary_out,
-          file = paste0("results/rda/", label, "_2wayRDA.csv"))
+          file = paste0("results/rda/", label, "_", str_remove_all(region, " "), "_2wayRDA.csv"), 
+          row.names = FALSE)
 
 write.csv(summary_out3,
-          file = paste0("results/rda/", label, "_3wayRDA.csv"))
+          file = paste0("results/rda/", label, "_", str_remove_all(region, " "), "_3wayRDA.csv"),
+          row.names = FALSE)
