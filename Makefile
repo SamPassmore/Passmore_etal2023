@@ -194,4 +194,5 @@ regional:
 	Rscript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx -r Africa
 	Rscript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx -r Europe
 	Rscript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx -r "Southeast Asia"
+	RScript analysis/concatenate_rdamantel.R -r
 

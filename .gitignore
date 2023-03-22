@@ -47,3 +47,8 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# ignore folders
+data/old
+Results/rda/old
+

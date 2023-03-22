@@ -13,8 +13,8 @@ opt = parse_args(OptionParser(option_list=option_list))
 
 region = opt$region
 
-mantel_files = list.files('results/mantel/', pattern = "partialmantel.csv", full.names = TRUE)
-rda_files = list.files('results/rda/', pattern = "3wayRDA.csv", full.names = TRUE)
+mantel_files = list.files('results/mantel/', pattern = paste0(region, "_partialmantel.csv"), full.names = TRUE)
+rda_files = list.files('results/rda/', pattern = paste0(region, "_3wayRDA.csv"), full.names = TRUE)
 
 mantel = lapply(mantel_files, read.csv)
 names(mantel) = basename(mantel_files)
@@ -38,6 +38,6 @@ out_table = map2(mantel, rda, function(m, r){
   dd
 })
 
-write.csv(out_table[[1]], file = "results/rda/rda_mantelsummary_10songs.csv")
-write.csv(out_table[[2]], file = "results/rda/rda_mantelsummary_2songs.csv")
-write.csv(out_table[[3]], file = "results/rda/rda_mantelsummary_sccs.csv")
+write.csv(out_table[[1]], file = "results/rda/rda_mantelsummary_10songs.csv", row.names = FALSE)
+write.csv(out_table[[2]], file = "results/rda/rda_mantelsummary_2songs.csv", row.names = FALSE)
+write.csv(out_table[[3]], file = "results/rda/rda_mantelsummary_sccs.csv", row.names = FALSE)

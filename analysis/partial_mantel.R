@@ -42,7 +42,7 @@ option_list <- list(
               help="Data file to use"),
   make_option(c("-r", "--region"),
               help="Region to subset to",
-              default = "Europe")
+              default = "world")
 )
 
 opt = parse_args(OptionParser(option_list=option_list))

@@ -1,7 +1,7 @@
 # RDA summary
 library(stringr)
 
-files = list.files("results/rda/", full.names = TRUE)
+files = list.files("results/rda/", full.names = TRUE, pattern = "*.csv")
 
 data = lapply(files, read.csv)
 names(data) = files %>% 

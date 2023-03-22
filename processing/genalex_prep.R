@@ -84,7 +84,8 @@ if(file.exists(file)){
   geo_dist = distm(
     matched_societies[,c("Society_longitude", "Society_latitude")], 
     fun = distHaversine
-  )  / 1000 # make into km
+  ) 
+  geo_dist = geo_dist / max(geo_dist)
   dimnames(geo_dist) = list(matched_societies$society_id,
                             matched_societies$society_id)
   geo_dist = cbind(geo_dist, rownames(geo_dist))
@@ -106,6 +107,7 @@ if(file.exists(file)){
   ##### build linguistic distance ####
   language = keep.tip(language, matched_societies$Glottocode)
   tree_dist = cophenetic.phylo(language)
+  tree_dist = tree_dist / max(tree_dist)
   
   colnames(tree_dist) = matched_societies$society_id[
     match(colnames(tree_dist), matched_societies$Glottocode)]
