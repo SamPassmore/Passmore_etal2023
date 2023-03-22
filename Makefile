@@ -18,8 +18,12 @@ help:
 	@echo 4. run `make amova` to calculate the proportion of within- and between-group variance for each data subset and each latent variable. 
 	@echo 5. run `make phist` to calculate musical similarity between societies, using PhiST scores. This creates phist for the two song dataset only. To calculate for the 10 and sccs samples used `make phist_10` and `make phist_sccs`.
 	@echo 6. run `make genalex_1` to prepare data for GenaLex. Models of geographic autocorrelation are performed used GenaLex, an excel plugin, available here: https://biology-assets.anu.edu.au/GenAlEx/Welcome.html
-	@echo 7. run `make genalex_2` to make the graphs from the manually created output. 
-	@echo 8. run `make delta` to calculate delta scores for an Indo-European, Oceanic, and African sample. 
+	@echo 7. Manually reproduce the GenaLex results in Excel. 
+	@echo 7=8. run `make genalex_2` to make the graphs from the manually created output. 
+	@echo 9. run `make delta`, `make delta_10`, and `make delta_sccs` to calculate delta scores for an Indo-European, Oceanic, and African sample. 
+	@echo 10. run `make mantel` to calculate the mantel test results between each musical dimension and linguistic, geographic, and genetic distances.
+	@echo 11. run `make rda` to calculate the rda results between each musical dimension and linguistic, geographic, and genetic distances
+	@echo 12. run `make regional` to calculate the rda results for regional subsets of data.
 
 clean:
 	rm -r processed_data results figures
