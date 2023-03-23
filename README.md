@@ -24,7 +24,7 @@ Run these commands in this order to reproduce the results.
 ```
 ## Data Sources
 
-This project combined musical, genetic, and linguistic data sources. Here, we list the original sources of those datasets. 
+This project combined musical, genetic, and linguistic data sources. Here, we list the original sources of those datasets. If you are using data from this project, please cite the original sources of the data. 
 
 | Dataset                               | Citation                                                                                                                                                                                                                                                                                                                                                                                                                      | Data Location                                    |
 |---------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
