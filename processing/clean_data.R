@@ -6,9 +6,21 @@ suppressPackageStartupMessages({
   library(stringr)
   library(assertthat)
   library(readxl)
+  library(optparse)
 })
 
 source('processing/processing_helper.R')
+
+option_list <- list( 
+  make_option(c("-r", "--random"), action="store", 
+              type="character", 
+              default = FALSE, 
+              help="Create a secondary random run of the data")
+)
+
+opt = parse_args(OptionParser(option_list=option_list))
+
+random_run = opt$random
 
 #### Read in Data ####
 # Raw codes
@@ -29,7 +41,17 @@ cantometrics_data$dual_id = paste0(cantometrics_data$song_id,
                                    cantometrics_data$society_id,
                                    cantometrics_data$var_id)
 
+
+idx = which(duplicated(cantometrics_data$dual_id))
+
+n_distinct(cantometrics_data$song_id[idx])
+cantometrics_check = cantometrics_data %>%
+  group_by(dual_id) %>%
+  mutate(Diff = code - lag(code))
+
+
 # Sample data
+set.seed(337474)
 cantometrics_clean = cantometrics_data %>%
   group_by(dual_id) %>%
   sample_n(1)
@@ -139,7 +161,13 @@ x = assert_that(all(table(cantometrics$song_id) == 1),
 cat("CANTOMETRICS SAMPLE:
 There are ", nrow(cantometrics), " songs and ", length(unique(cantometrics$society_id)), " societies")
 
-write.csv(cantometrics, 
-          'processed_data/cleaned_cantometrics.csv', 
-          row.names = FALSE)
+if(random_run != "FALSE"){
+  write.csv(cantometrics, 
+            paste0('processed_data/cleaned_cantometrics_', random_run,'.csv'), 
+            row.names = FALSE)
+} else {
+  write.csv(cantometrics, 
+            'processed_data/cleaned_cantometrics.csv', 
+            row.names = FALSE)
+}
 

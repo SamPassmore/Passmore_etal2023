@@ -145,12 +145,12 @@ genalex_2:
 	
 delta:
 	@echo Calculate Delta scores
-	RScript analysis/delta_scores.R -r differentiation -d processed_data/latent_variablemodelcantometrics_2songs.csv
-	RScript analysis/delta_scores.R -r ornamentation -d processed_data/latent_variablemodelcantometrics_2songs.csv
-	RScript analysis/delta_scores.R -r rhythm -d processed_data/latent_variablemodelcantometrics_2songs.csv
-	RScript analysis/delta_scores.R -r dynamics -d processed_data/latent_variablemodelcantometrics_2songs.csv
-	RScript analysis/delta_scores.R -r tension -d processed_data/latent_variablemodelcantometrics_2songs.csv
-	RScript analysis/delta_scores.R -r all -d processed_data/latent_variablemodelcantometrics_2songs.csv
+	#RScript analysis/delta_scores.R -r differentiation -d processed_data/latent_variablemodelcantometrics_2songs.csv
+	#RScript analysis/delta_scores.R -r ornamentation -d processed_data/latent_variablemodelcantometrics_2songs.csv
+	#RScript analysis/delta_scores.R -r rhythm -d processed_data/latent_variablemodelcantometrics_2songs.csv
+	#RScript analysis/delta_scores.R -r dynamics -d processed_data/latent_variablemodelcantometrics_2songs.csv
+	#RScript analysis/delta_scores.R -r tension -d processed_data/latent_variablemodelcantometrics_2songs.csv
+	RScript analysis/delta_scores.R -r all -d processed_data/latent_variablemodelcantometrics_2songs.csv # you might run out of memory for this analysis. consider using less comparisons or fewer nodes. 
 	RScript analysis/deltascore_summary.R -d 2songs
 	
 delta_10:
@@ -199,4 +199,12 @@ regional:
 	Rscript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx -r Europe
 	Rscript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx -r "Southeast Asia"
 	RScript analysis/concatenate_rdamantel.R -r
-
+	
+random_test:
+	@echo Create three random datasets
+	RScript processing/clean_data.R -r 100
+	RScript processing/clean_data.R -r 101
+	RScript processing/clean_data.R -r 102
+	RScript analysis/latent_variablemodel.R -d processed_data/cleaned_cantometrics_100.csv
+	RScript analysis/latent_variablemodel.R -d processed_data/cleaned_cantometrics_101.csv
+	RScript analysis/latent_variablemodel.R -d processed_data/cleaned_cantometrics_102.csv

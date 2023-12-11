@@ -27,7 +27,7 @@ option_list <- list(
               default = "differentiation"),
   make_option(c("-s", "--societies"),
               help="Max number of societies to analyse",
-              default = "50")
+              default = "100")
 )
 
 opt = parse_args(OptionParser(option_list=option_list))
@@ -35,6 +35,9 @@ opt = parse_args(OptionParser(option_list=option_list))
 datafile = opt$datafile
 response = opt$response
 n_societies = as.numeric(opt$societies)
+remaining_cores = 8
+
+cat("Running ", response, "\n")
 
 #### data ####
 cantometrics = read.csv(datafile)
@@ -102,7 +105,8 @@ ad = african_data[,variables]
 ad_taxa = as.character(african_data$society_id)
 rownames(ad) = ad_taxa
 
-africa_delta = delta_score(ad, ad_taxa, method = "euclidean", n_cores = detectCores() - 1)
+cat("Running Africa...")
+africa_delta = delta_score(ad, ad_taxa, method = "euclidean", n_cores = detectCores() - remaining_cores)
 
 #### Oceania ####
 oceania_data = cantometrics %>%
@@ -119,7 +123,8 @@ oc = oceania_data[,variables]
 oc_taxa = as.character(oceania_data$society_id)
 rownames(oc) = oc_taxa
 
-oceania_delta = delta_score(oc, oc_taxa, method = "euclidean", n_cores = detectCores() - 1)
+cat("Running Oceania...")
+oceania_delta = delta_score(oc, oc_taxa, method = "euclidean", n_cores = detectCores() - remaining_cores)
 
 #### European ####
 european_data = cantometrics %>%
@@ -136,7 +141,8 @@ eu = european_data[,variables]
 eu_taxa = as.character(european_data$society_id)
 rownames(eu) = eu_taxa
 
-european_delta = delta_score(eu, eu_taxa, method = "euclidean", n_cores = detectCores() - 1)
+cat("Running Europe...")
+european_delta = delta_score(eu, eu_taxa, method = "euclidean", n_cores = detectCores() - remaining_cores)
 
 format_output = function(x, location = "africa"){
   df = data.frame(societies = names(x$delta_taxon_scores),
