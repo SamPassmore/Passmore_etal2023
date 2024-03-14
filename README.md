@@ -1,6 +1,8 @@
 # Code repository for Independent histories underlie global musical, linguistic, and genetic diversity
 _Sam Passmore, Anna L. C. Wood, Chiara Barbieri, Dor Shilton, Hideo Daikoku, Quentin D. Atkinson, Patrick E. Savage_
 
+[![DOI](https://zenodo.org/badge/598418943.svg)](https://zenodo.org/doi/10.5281/zenodo.10817211)
+
 This repository contains the code and data necessary to reproduce the results for the paper _Independent histories underlie global musical, linguistic, and genetic diversity_.
 All result files are held in this repository, and can be reproduced using the Makefile. 
 One exception are the autocorrelational results which are calculated through the Excel add-on GenALeX and would need to be manually reproduced. 
