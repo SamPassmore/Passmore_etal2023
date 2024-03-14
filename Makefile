@@ -56,9 +56,10 @@ musical_dimensions:
 	RScript analysis/latent_variablemodel.R -d processed_data/cantometrics_10songs.csv
 	RScript analysis/latent_variablemodel.R -d processed_data/cantometrics_sccs.csv
 	RScript analysis/latent_variablemodel.R -d processed_data/cantometrics_2songs.csv -l data/latent_variablemodel_highreliability.txt
-	RScript analysis/latentmodel_comparison.R # Code for Table S9
+	RScript analysis/latentmodel_comparison.R # Code for Table S9 & Table S10
 	RScript analysis/variable_redundancy.R # Code fore Figure S4
 	RScript figure_code/figure2.R # Code for Figure 2
+	RScript analysis/principal_components.R # Table S8
 	
 amova:
 	mkdir -p results/amova
@@ -98,6 +99,8 @@ amova:
 	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r rhythm -g Division
 	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r dynamics -g Division
 	Rscript analysis/amova.R -d processed_data/latent_variablemodelcantometrics_sccs.csv -r tension -g Division
+	@echo Summarise main results..
+	Rscript analysis/amova_summary.R # Figure S5 & Table S11
 	
 phist:
 	@echo	Creation of the Musical PhiST matrices. 
@@ -109,7 +112,7 @@ phist:
 	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r dynamics
 	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r tension
 	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r all
-	RScript figure_code/figs6_fst_density.R
+	RScript figure_code/figs6_fst_density.R # Figure S6 & Figure S11 - S16
 	
 phist_10:
 	mkdir -p results/phist
@@ -142,9 +145,9 @@ genalex_1:
 
 genalex_2:
 	@echo Make Genalex Plots
-	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx
-	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_10songsdistances.xlsx
-	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_sccsdistances.xlsx
+	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx # Figure 3 & Figure S7
+	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_10songsdistances.xlsx # Figure S8
+	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_sccsdistances.xlsx # Figure S9
 	RScript analysis/genalex_comparison.R
 
 delta:
@@ -155,7 +158,7 @@ delta:
 	RScript analysis/delta_scores.R -r dynamics -d processed_data/latent_variablemodelcantometrics_2songs.csv
 	RScript analysis/delta_scores.R -r tension -d processed_data/latent_variablemodelcantometrics_2songs.csv
 	RScript analysis/delta_scores.R -r all -d processed_data/latent_variablemodelcantometrics_2songs.csv # you might run out of memory for this analysis. consider using less comparisons or fewer nodes. 
-	RScript analysis/deltascore_summary.R -d 2songs
+	RScript analysis/deltascore_summary.R -d 2songs # Table S16
 	
 delta_10:
 	@echo Calculate Delta scores
@@ -164,7 +167,7 @@ delta_10:
 	RScript analysis/delta_scores.R -r rhythm -d processed_data/latent_variablemodelcantometrics_10songs.csv
 	RScript analysis/delta_scores.R -r dynamics -d processed_data/latent_variablemodelcantometrics_10songs.csv
 	RScript analysis/delta_scores.R -r tension -d processed_data/latent_variablemodelcantometrics_10songs.csv
-	RScript analysis/deltascore_summary.R -d 10songs
+	RScript analysis/deltascore_summary.R -d 10songs # Table S16
 	
 delta_sccs:
 	@echo Calculate Delta scores
@@ -173,7 +176,8 @@ delta_sccs:
 	RScript analysis/delta_scores.R -r rhythm -d processed_data/latent_variablemodelcantometrics_sccs.csv
 	RScript analysis/delta_scores.R -r dynamics -d processed_data/latent_variablemodelcantometrics_sccs.csv
 	RScript analysis/delta_scores.R -r tension -d processed_data/latent_variablemodelcantometrics_sccs.csv
-	RScript analysis/deltascore_summary.R -d sccs
+	RScript analysis/deltascore_summary.R -d sccs # Table S16
+	RScript analysis/summarise_deltaplot.R # Figure S10
 	
 mantel:
 	@echo Calculate Partial Mantel scores
@@ -189,8 +193,8 @@ rda:
 	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx
 	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_10songsdistances.xlsx
 	Rscript analysis/partial_rda.R -d data/latent_variablemodelcantometrics_sccsdistances.xlsx
-	RScript analysis/summarise_rda.R
-	RScript analysis/concatenate_rdamantel.R
+	RScript analysis/summarise_rda.R # Table S20
+	RScript analysis/concatenate_rdamantel.R # Table S17 S18 S19
 	
 regional:
 	@echo Calculate RDA R2
