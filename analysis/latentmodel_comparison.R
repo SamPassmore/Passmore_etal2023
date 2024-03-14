@@ -32,11 +32,9 @@ for(i in 1:5){
 }
 
 cor.value = lapply(correlation, "[[", "estimate") %>% 
-  unlist() %>% 
-  round(., 2)
+  unlist() 
 p.value = lapply(correlation, "[[", "p.value") %>% 
-  unlist() %>% 
-  round(., 4)
+  unlist() 
 cor.table = data.frame(full = c("Articulation", "Ornamentation", "Rhythm", "Dynamics", "Tension"),
                        restricted = c("Articulation", "Ornamentation", "Line 11", "Dynamics", "Line 29"),
                        correlation = cor.value,
@@ -140,5 +138,6 @@ correlation_table$p = ifelse(correlation_table$p == 0, "<0.001", correlation_tab
 
 output_file = 'results/latentsample_comparison.csv'
 cat("Results saved at", output_file, "\n")
+cat("This table is Table S9.\n")
 write.csv(correlation_table, file = output_file, row.names = FALSE)
 

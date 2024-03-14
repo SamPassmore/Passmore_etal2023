@@ -125,6 +125,14 @@ cantometric_songs = cantometric_songs %>%
 cantometrics = dplyr::left_join(cantometrics, cantometric_songs, 
                                 by = c("song_id", "society_id"))
 
+## To make the Rhythm latent variable score regular rhythm songs as high values
+## We need to reverse code variables included in this latent variable
+## This has a minimal statistical influence on the model and make the 
+## latent variable easier to understand.
+cantometrics$line_11 = cantometrics$line_11 * -1
+cantometrics$line_24 = cantometrics$line_24 * -1
+cantometrics$line_17 = cantometrics$line_17 * -1
+
 #### Manual matching changes ####
 
 # Make manual adjustments to glottocodes to ensure links to phylogeny
@@ -148,9 +156,6 @@ complete_data = complete.cases(cantometrics[,str_detect(colnames(cantometrics), 
 
 ## Only keep songs with complete data
 cantometrics = cantometrics[complete_data,]
-
-# Test there are only positive values
-x = assert_that(all(cantometrics[,cols_cantometrics] >= 0), msg = "Some values are positive!")
 
 # Test that all values are less than 1. 
 x = assert_that(all(cantometrics[,3:39] <= 1, na.rm = TRUE))

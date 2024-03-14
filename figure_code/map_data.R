@@ -5,10 +5,6 @@ suppressPackageStartupMessages({
   library(ggplot2)
   library(optparse)
   library(dplyr)
-  # library(tidyr)
-  # library(GGally)
-  # library(rgl)
-  # library(scales)
 })
 
 option_list <- list( 
@@ -98,6 +94,6 @@ society_map = basemap +
 ggsave(paste0(
   "figures/",
   tools::file_path_sans_ext(basename(datafile)),
-  "_map.png"),
+  "_map.pdf"),
   society_map
 )

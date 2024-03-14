@@ -77,7 +77,7 @@ p1 = ggplot(df, aes(x = Distance, y = r, group = type, col = type)) +
 label = tools::file_path_sans_ext(basename(datafile)) 
 
 ggsave(filename = paste0(
-  "figures/figure3_", label, ".png"), 
+  "figures/figure3_", label, ".pdf"), 
   plot = p1, width = 210, height = 180, units = "mm")
 
 ### Supplementary Figures ####

@@ -48,6 +48,6 @@ p1 = ggplot(rda_df, aes(explanatory, response)) +
         axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) + 
   facet_wrap(~variable)
 
-ggsave("figures/heatmap_figure.jpg", plot = p1, bg="white", height = 140, width = 200, units = "mm")
+ggsave("figures/figure4.pdf", plot = p1, bg="white", height = 140, width = 200, units = "mm")
 
 write.csv(rda_df, "results/rda/regionalandglobal_rda.csv")
