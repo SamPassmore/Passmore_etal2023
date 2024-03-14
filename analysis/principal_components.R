@@ -4,6 +4,10 @@
 suppressPackageStartupMessages({
   library(psych)
   library(optparse)
+  library(stringr)
+  library(ggplot2)
+  library(tidyr)
+  library(dplyr)
 })
 
 #### Command line Parameters ####
@@ -11,7 +15,7 @@ option_list = list(
   make_option(
     c("-f", "--file"),
     type = "character",
-    default = "processed_data/cantometrics_2songs.csv",
+    default = "processed_data/latent_variablemodelcantometrics_2songs.csv",
     help = "dataset file name",
     metavar = "character"
   )
@@ -47,48 +51,6 @@ dev.off()
 scores = canto_pca$scores
 cantometrics = cbind(cantometrics,scores)
 
-## Plot PCA variables against latent variables
-# Display figure for Pat
-d3 = ggplot(cantometrics, aes(y = differentiation, x = RC1)) + 
-  geom_point(alpha = 0.3) + 
-  xlab("PC1: 21%") + 
-  ylab("Articulation") +
-  theme(text = element_text(size=15))
-o1 = ggplot(cantometrics, aes(y = ornamentation, x = RC3)) + 
-  geom_point(alpha = 0.3) + 
-  xlab("PC3: 17%") + 
-  ylab("Ornamentation") +
-  theme(text = element_text(size=15))
-r1 = ggplot(cantometrics, aes(y = rhythm, x = RC3)) + 
-  geom_point(alpha = 0.3) + 
-  xlab("PC3: 17%") + 
-  ylab("Rhythm") +
-  theme(text = element_text(size=15))
-dy5 = ggplot(cantometrics, aes(y = dynamics, x = RC5)) + 
-  geom_point(alpha = 0.3) + 
-  xlab("PC6: 17%") + 
-  ylab("Dynamics") +
-  theme(text = element_text(size=15))
-t2 = ggplot(cantometrics, aes(y = tension, x = RC2)) + 
-  geom_point(alpha = 0.3) + 
-  xlab("PC2: 20%") + 
-  ylab("Tension") +
-  theme(text = element_text(size=15))
-or3 = ggplot(cantometrics, aes(y = organization, x = RC2)) + 
-  geom_point(alpha = 0.3) + 
-  xlab("PC2: 20%") + 
-  ylab("Organization") +
-  theme(text = element_text(size=15))
-
-jpeg('figures/pca_comparison.jpeg', 
-     width = 200, 
-     height = 180,
-     units = "mm", res = 72)
-d3 + t2 + or3 + o1 +  r1 + dy5 + 
-  plot_annotation(
-    title = "Cantometric variables vs Principal Components")
-dev.off()
-
 #### Latent Comparison
 # save loadings
 descriptions = read.csv('raw/gjb/etc/variables.csv') 
@@ -98,7 +60,7 @@ descriptions$title = str_replace_all(descriptions$title,
 
 loadings = data.frame(canto_pca$loadings[,1:ncol(canto_pca$loadings)])
 loadings$line = rownames(loadings)
-param_est = read.csv('results/lavaan_parameterestimates.csv')
+param_est = read.csv('results/lavaanparameterestimates_cantometrics_2songs.csv')
 param_est = param_est[1:20,]
 param_est = param_est[,c("lhs", "rhs", "std.all")]
 param_wide = pivot_wider(data = param_est, 

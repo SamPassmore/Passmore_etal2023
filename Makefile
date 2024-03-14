@@ -42,9 +42,10 @@ process_data: install
 	RScript processing/prune_edgetree.R
 	@echo Make maps of the samples
 	mkdir -p figures/
-	RScript figure_code/map_data.R -d processed_data/cantometrics_2songs.csv
-	RScript figure_code/map_data.R -d processed_data/cantometrics_10songs.csv
-	RScript figure_code/map_data.R -d processed_data/cantometrics_sccs.csv
+	RScript figure_code/map_data.R -d processed_data/cantometrics_2songs.csv # Code for Figure 1
+	RScript figure_code/map_data.R -d processed_data/cantometrics_10songs.csv # Code for Figure S2
+	RScript figure_code/map_data.R -d processed_data/cantometrics_sccs.csv # Code for Figure S3
+	RScript figure_code/figure_s1.R # Code for Figure S1
 	
 musical_dimensions:
 	mkdir -p results/
@@ -55,8 +56,10 @@ musical_dimensions:
 	RScript analysis/latent_variablemodel.R -d processed_data/cantometrics_10songs.csv
 	RScript analysis/latent_variablemodel.R -d processed_data/cantometrics_sccs.csv
 	RScript analysis/latent_variablemodel.R -d processed_data/cantometrics_2songs.csv -l data/latent_variablemodel_highreliability.txt
-	RScript analysis/latentmodel_comparison.R
-
+	RScript analysis/latentmodel_comparison.R # Code for Table S9
+	RScript analysis/variable_redundancy.R # Code fore Figure S4
+	RScript figure_code/figure2.R # Code for Figure 2
+	
 amova:
 	mkdir -p results/amova
 	@echo Perfoming Linguistic AMOVA tests with a two song sample...
@@ -106,6 +109,7 @@ phist:
 	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r dynamics
 	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r tension
 	RScript analysis/phi_st.R -d processed_data/latent_variablemodelcantometrics_2songs.csv -r all
+	RScript figure_code/figs6_fst_density.R
 	
 phist_10:
 	mkdir -p results/phist
@@ -142,7 +146,7 @@ genalex_2:
 	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_10songsdistances.xlsx
 	RScript figure_code/variograms.R -d data/latent_variablemodelcantometrics_sccsdistances.xlsx
 	RScript analysis/genalex_comparison.R
-	
+
 delta:
 	@echo Calculate Delta scores
 	RScript analysis/delta_scores.R -r differentiation -d processed_data/latent_variablemodelcantometrics_2songs.csv
@@ -150,7 +154,7 @@ delta:
 	RScript analysis/delta_scores.R -r rhythm -d processed_data/latent_variablemodelcantometrics_2songs.csv
 	RScript analysis/delta_scores.R -r dynamics -d processed_data/latent_variablemodelcantometrics_2songs.csv
 	RScript analysis/delta_scores.R -r tension -d processed_data/latent_variablemodelcantometrics_2songs.csv
-	RScript analysis/delta_scores.R -r all -d processed_data/latent_variablemodelcantometrics_2songs.csv
+	RScript analysis/delta_scores.R -r all -d processed_data/latent_variablemodelcantometrics_2songs.csv # you might run out of memory for this analysis. consider using less comparisons or fewer nodes. 
 	RScript analysis/deltascore_summary.R -d 2songs
 	
 delta_10:
@@ -199,4 +203,12 @@ regional:
 	Rscript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx -r Europe
 	Rscript analysis/partial_mantel.R -d data/latent_variablemodelcantometrics_2songsdistances.xlsx -r "Southeast Asia"
 	RScript analysis/concatenate_rdamantel.R -r
-
+	
+random_test:
+	@echo Create three random datasets
+	RScript processing/clean_data.R -r 100
+	RScript processing/clean_data.R -r 101
+	RScript processing/clean_data.R -r 102
+	RScript analysis/latent_variablemodel.R -d processed_data/cleaned_cantometrics_100.csv
+	RScript analysis/latent_variablemodel.R -d processed_data/cleaned_cantometrics_101.csv
+	RScript analysis/latent_variablemodel.R -d processed_data/cleaned_cantometrics_102.csv
